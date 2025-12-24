@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Selamat Ulang Tahun Ugee sayangg</title>
+
+  <style>
+    :root{
+      --bg:#0f172a; --accent:#ff7ab6; --cake:#ffe0b2; --icing:#ff8fab; --plate:#e2e8f0;
+      --flame1:#ffd166; --flame2:#ff8c00;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;display:grid;place-items:center;
+      background:radial-gradient(1200px 600px at 50% 0%, #1f2937 0, #0f172a 60%);
+      color:#fff;font-family:system-ui
+    }
+    .container{text-align:center;padding:24px}
+    h1{font-size:clamp(28px,5vw,48px);margin:0 0 16px}
+    .subtitle{opacity:.85;margin-bottom:28px}
+
+    .scene{position:relative;width:320px;height:280px;margin:0 auto 20px}
+    .plate{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+      width:280px;height:24px;background:var(--plate);border-radius:50%}
+    .cake{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+      width:220px;height:140px;background:var(--cake);
+      border-radius:18px 18px 10px 10px;box-shadow:inset 0 -10px 0 #f2c48c}
+    .icing{position:absolute;top:-20px;left:0;right:0;height:60px;
+      background:var(--icing);border-radius:18px 18px 0 0;
+      clip-path:polygon(0 0,100% 0,100% 70%,92% 85%,80% 70%,68% 88%,56% 68%,44% 86%,32% 68%,20% 86%,8% 70%,0 86%)}
+    .candles{position:absolute;top:-70px;left:50%;transform:translateX(-50%);
+      display:flex;gap:16px}
+    .candle{position:relative;width:14px;height:60px;
+      background:linear-gradient(#fff,#ddd);border-radius:6px}
+    .candle:before{content:"";position:absolute;top:-10px;left:50%;
+      transform:translateX(-50%);width:2px;height:12px;background:#333}
+    .flame{position:absolute;top:-24px;left:50%;transform:translateX(-50%);
+      width:14px;height:22px;border-radius:10px;
+      background:radial-gradient(ellipse at 50% 60%, var(--flame1) 0%, var(--flame2) 70%, transparent 72%);
+      filter:drop-shadow(0 0 10px #ffae00);
+      animation:flicker .12s infinite alternate}
+    @keyframes flicker{
+      from{transform:translateX(-50%) scale(1)}
+      to{transform:translateX(-48%) scale(1.05)}
+    }
+
+    .btn{
+      border:0;background:#22c55e;color:#061017;
+      padding:14px 22px;font-weight:700;border-radius:999px;
+      cursor:pointer;box-shadow:0 8px 20px rgba(34,197,94,.3)
+    }
+
+    .small{font-size:14px;opacity:.8;margin-top:10px}
+    #typingText{margin-top:20px;font-size:18px;color:#ffd1e8;min-height:28px}
+
+    .sparkles{position:absolute;inset:0;pointer-events:none}
+    .sparkles span{position:absolute;width:6px;height:6px;border-radius:50%;
+      background:rgba(255,255,255,.9);animation:up 1.8s linear infinite}
+    @keyframes up{
+      from{transform:translateY(0);opacity:1}
+      to{transform:translateY(-140px);opacity:0}
+    }
+
+    .blown .flame{opacity:0}
+    video{display:none;position:fixed;inset:0;width:100vw;height:100vh;
+      object-fit:cover;background:#000;z-index:50}
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <h1>Cie 18 tahun 🎉</h1>
+  <p class="subtitle">Semoga panjang umur, sehat selalu, dan semua harapan tercapai.</p>
+
+  <div class="scene">
+    <div class="plate"></div>
+    <div class="cake">
+      <div class="icing"></div>
+      <div class="candles">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+      </div>
+    </div>
+    <div class="sparkles"></div>
+  </div>
+
+  <button id="blowBtn" class="btn">Tiup Lilinnya 🕯️</button>
+  <div class="small">Sentuh tombol untuk kejutan 🎁</div>
+  <p id="typingText"></p>
+</div>
+
+<!-- VIDEO -->
+<video id="surpriseVideo">
+  <source src="momen.mp4" type="video/mp4">
+</video>
+
+<!-- AUDIO -->
+<audio id="bgMusic" loop>
+  <source src="HBD.mp3" type="audio">
+</audio>
+
+<audio id="blowSound">
+  <source src="blow.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(function(){
+  const btn = document.getElementById('blowBtn');
+  const video = document.getElementById('surpriseVideo');
+  const bgMusic = document.getElementById('bgMusic');
+  const blowSound = document.getElementById('blowSound');
+  const typingText = document.getElementById('typingText');
+  const sparkles = document.querySelector('.sparkles');
+
+  const message = "Selamat ulang tahun Ugee 🤍 Semoga selalu bahagia, sehat, dan semua mimpimu tercapai ✨";
+
+  for(let i=0;i<30;i++){
+    const s=document.createElement('span');
+    s.style.left=Math.random()*100+'%';
+    s.style.bottom=Math.random()*20+'px';
+    s.style.animationDelay=Math.random()*1.5+'s';
+    sparkles.appendChild(s);
+  }
+
+  function typeWriter(text){
+    let i=0;
+    typingText.textContent="";
+    const t=setInterval(()=>{
+      typingText.textContent+=text.charAt(i);
+      i++;
+      if(i>=text.length) clearInterval(t);
+    },55);
+  }
+
+  btn.onclick=async()=>{
+    document.body.classList.add('blown');
+    btn.disabled=true;
+    btn.textContent="Semoga bahagia selalu 🎂";
+
+    bgMusic.volume=0.4;
+    bgMusic.play().catch(()=>{});
+    blowSound.play().catch(()=>{});
+    typeWriter(message);
+
+    video.style.display="block";
+    try{
+      await video.requestFullscreen();
+      await video.play();
+    }catch{
+      video.controls=true;
+    }
+
+    video.onended=()=>{
+      bgMusic.pause();
+      bgMusic.currentTime=0;
+      video.style.display="none";
+      if(document.fullscreenElement) document.exitFullscreen();
+    };
+  };
+})();
+</script>
+</body>
+</html>
